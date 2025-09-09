@@ -4,395 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Gamified - Teacher Dashboard</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Login View Styles */
-        #login-view {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-            padding: 20px;
-        }
-
-        #login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        #login-form h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #2E7D32;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-
-        #login-form button {
-            width: 100%;
-            padding: 0.75rem;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        #login-form button:hover {
-            background: #45a049;
-        }
-
-        #login-form button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-        }
-
-        #login-error {
-            color: #dc3545;
-            text-align: center;
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background: #f8d7da;
-            border-radius: 4px;
-            display: none;
-        }
-
-        /* Dashboard View Styles */
-        #dashboard-view {
-            display: none;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            border-radius: 12px;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-left h1 {
-            font-size: 1.8rem;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .header-left p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        #user-info {
-            text-align: right;
-        }
-
-        #welcome-message {
-            font-weight: 500;
-        }
-
-        #logout-button {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 0.5rem;
-            transition: background 0.2s ease;
-        }
-
-        #logout-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Thread List View */
-        #thread-list-container {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .thread-item {
-            padding: 1.5rem;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: white;
-        }
-
-        .thread-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: #4CAF50;
-        }
-
-        .thread-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
-
-        .thread-author {
-            font-weight: 600;
-            color: #4CAF50;
-        }
-
-        .thread-grade {
-            background: #e8f5e8;
-            color: #2e7d32;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .thread-preview {
-            color: #666;
-            margin-bottom: 0.5rem;
-            line-height: 1.5;
-        }
-
-        .thread-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #999;
-        }
-
-        .thread-time {
-            font-style: italic;
-        }
-
-        /* Thread Detail View */
-        #back-button {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 1rem;
-            transition: background 0.2s ease;
-        }
-
-        #back-button:hover {
-            background: #5a6268;
-        }
-
-        #original-post {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #4CAF50;
-        }
-
-        .original-post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        #comments-list {
-            margin-bottom: 2rem;
-        }
-
-        .comment-item {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border-left: 3px solid #e9ecef;
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
-
-        .comment-author {
-            font-weight: 600;
-            color: #4CAF50;
-        }
-
-        .comment-time {
-            font-size: 0.8rem;
-            color: #999;
-        }
-
-        .comment-message {
-            color: #555;
-            line-height: 1.5;
-        }
-
-        /* Forms */
-        #comment-form {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        #comment-text {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            resize: vertical;
-            min-height: 100px;
-            font-family: inherit;
-            margin-bottom: 1rem;
-            transition: border-color 0.2s ease;
-        }
-
-        #comment-text:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-
-        #comment-form button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s ease;
-        }
-
-        #comment-form button:hover {
-            background: #45a049;
-        }
-
-        #comment-form button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-        }
-
-        /* Loading and States */
-        #loading-indicator, #error-message, #no-threads {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: white;
-            border-radius: 12px;
-            margin: 2rem 0;
-        }
-
-        #loading-indicator {
-            color: #666;
-        }
-
-        #error-message {
-            color: #dc3545;
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-
-        #no-threads {
-            color: #666;
-            font-style: italic;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            header {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            #user-info {
-                text-align: center;
-            }
-
-            .thread-header, .original-post-header, .comment-header {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .thread-item {
-                padding: 1rem;
-            }
-
-            #original-post {
-                padding: 1.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- LOGIN VIEW (Shown first) -->
@@ -416,48 +28,146 @@
 
     <!-- DASHBOARD VIEW (Hidden until logged in) -->
     <div id="dashboard-view">
-        <header>
-            <div class="header-left">
-                <h1>Math Gamified Community Forum</h1>
-                <p>Connect with other educators and share insights</p>
+        <!-- Sidebar Navigation -->
+        <div id="sidebar">
+            <div class="sidebar-header">
+                <h2>Math Gamified</h2>
+                <p>Teacher Dashboard</p>
             </div>
-            <div id="user-info">
-                <div id="welcome-message">Loading...</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active" data-view="thread-list-view">
+                    <span class="menu-icon">💬</span>
+                    <span class="menu-text">Community Forum</span>
+                </li>
+                <li class="menu-item" data-view="leaderboard-view">
+                    <span class="menu-icon">🏆</span>
+                    <span class="menu-text">Leaderboard</span>
+                </li>
+                <li class="menu-item" data-view="analytics-view">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Analytics</span>
+                </li>
+                <li class="menu-item" data-view="content-view">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">Content Management</span>
+                </li>
+                <li class="menu-item" data-view="settings-view">
+                    <span class="menu-icon">⚙️</span>
+                    <span class="menu-text">Settings</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
                 <button id="logout-button">Logout</button>
-            </div>
-        </header>
-
-        <!-- Thread List View -->
-        <div id="thread-list-view">
-            <div id="thread-list-container">
-                <h2>Recent Discussions</h2>
-                <div id="thread-list"></div>
-                
-                <!-- States -->
-                <div id="loading-indicator">Loading community discussions...</div>
-                <div id="error-message" class="hidden"></div>
-                <div id="no-threads" class="hidden">No discussions yet. Be the first to start one!</div>
             </div>
         </div>
 
-        <!-- Thread Detail View -->
-        <div id="thread-detail-view" class="hidden">
-            <button id="back-button">← Back to All Discussions</button>
-            
-            <div id="original-post"></div>
+        <!-- Main Content Area -->
+        <div id="main-content">
+            <header>
+                <div class="header-left">
+                    <h1 id="page-title">Community Forum</h1>
+                    <p id="page-description">Connect with other educators and share insights</p>
+                </div>
+                <div id="user-info">
+                    <div id="welcome-message">Loading...</div>
+                </div>
+            </header>
 
-            <h3>Community Responses</h3>
-            <div id="comments-list"></div>
+            <!-- Thread List View -->
+            <div id="thread-list-view" class="content-view">
+                <div id="thread-list-container">
+                    <h2>Recent Discussions</h2>
+                    <div id="thread-list"></div>
+                    
+                    <!-- States -->
+                    <div id="loading-indicator">Loading community discussions...</div>
+                    <div id="error-message" class="hidden"></div>
+                    <div id="no-threads" class="hidden">No discussions yet. Be the first to start one!</div>
+                </div>
+            </div>
 
-            <form id="comment-form">
-                <textarea 
-                    id="comment-text" 
-                    placeholder="Share your thoughts, answer a question, or provide support..." 
-                    required 
-                    rows="4"
-                ></textarea>
-                <button type="submit" id="submit-comment">Post Response</button>
-            </form>
+            <!-- Thread Detail View -->
+            <div id="thread-detail-view" class="content-view hidden">
+                <button id="back-button">← Back to All Discussions</button>
+                
+                <div id="original-post"></div>
+
+                <h3>Community Responses</h3>
+                <div id="comments-list"></div>
+
+                <form id="comment-form">
+                    <textarea 
+                        id="comment-text" 
+                        placeholder="Share your thoughts, answer a question, or provide support..." 
+                        required 
+                        rows="4"
+                    ></textarea>
+                    <button type="submit" id="submit-comment">Post Response</button>
+                </form>
+            </div>
+
+            <!-- Leaderboard View -->
+            <div id="leaderboard-view" class="content-view hidden">
+                <div class="view-header">
+                    <h2>Student Leaderboard</h2>
+                    <p>Track student progress and achievements</p>
+                </div>
+                
+                <div class="leaderboard-filters">
+                    <select id="time-filter">
+                        <option value="all-time">All Time</option>
+                        <option value="monthly">This Month</option>
+                        <option value="weekly">This Week</option>
+                    </select>
+                    <select id="grade-filter">
+                        <option value="all-grades">All Grades</option>
+                        <option value="grade-4">Grade 4</option>
+                        <option value="grade-5">Grade 5</option>
+                        <option value="grade-6">Grade 6</option>
+                    </select>
+                </div>
+                
+                <div id="leaderboard-list"></div>
+                
+                <div id="leaderboard-loading" class="loading-indicator">Loading leaderboard...</div>
+                <div id="leaderboard-error" class="error-message hidden"></div>
+            </div>
+
+            <!-- Analytics View -->
+            <div id="analytics-view" class="content-view hidden">
+                <div class="view-header">
+                    <h2>Class Analytics</h2>
+                    <p>Track student progress and performance metrics</p>
+                </div>
+                <div class="placeholder-content">
+                    <h3>Analytics Dashboard Coming Soon</h3>
+                    <p>This section will provide detailed analytics on student performance, engagement metrics, and class progress.</p>
+                </div>
+            </div>
+
+            <!-- Content Management View -->
+            <div id="content-view" class="content-view hidden">
+                <div class="view-header">
+                    <h2>Content Management</h2>
+                    <p>Create and manage learning materials</p>
+                </div>
+                <div class="placeholder-content">
+                    <h3>Content Management Coming Soon</h3>
+                    <p>This section will allow you to create, edit, and organize learning materials for your students.</p>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="content-view hidden">
+                <div class="view-header">
+                    <h2>Settings</h2>
+                    <p>Manage your account preferences</p>
+                </div>
+                <div class="placeholder-content">
+                    <h3>Settings Panel Coming Soon</h3>
+                    <p>This section will allow you to customize your account settings and preferences.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -466,287 +176,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-    <script>
-        // Your Firebase Configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyCp-VbOO8Eu9PJwIwdIdx7GZRj3mKJFI0U",
-          authDomain: "funplusmath.firebaseapp.com",
-          databaseURL: "https://funplusmath-default-rtdb.firebaseio.com",
-          projectId: "funplusmath",
-          storageBucket: "funplusmath.firebasestorage.app",
-          messagingSenderId: "206752787003",
-          appId: "1:206752787003:web:1a303d09b4e2bfb8e74a1e"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        // DOM Elements
-        const loginView = document.getElementById('login-view');
-        const dashboardView = document.getElementById('dashboard-view');
-        const loginForm = document.getElementById('login-form');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginButton = document.getElementById('login-button');
-        const loginError = document.getElementById('login-error');
-        const logoutButton = document.getElementById('logout-button');
-        const welcomeMessage = document.getElementById('welcome-message');
-        const threadListView = document.getElementById('thread-list-view');
-        const threadDetailView = document.getElementById('thread-detail-view');
-        const threadList = document.getElementById('thread-list');
-        const backButton = document.getElementById('back-button');
-        const commentForm = document.getElementById('comment-form');
-        const commentText = document.getElementById('comment-text');
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const errorMessage = document.getElementById('error-message');
-        const noThreads = document.getElementById('no-threads');
-
-        // State
-        let currentThreadId = null;
-
-        // Login Functionality
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            
-            loginButton.disabled = true;
-            loginButton.textContent = 'Signing in...';
-            loginError.style.display = 'none';
-
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-                // Success handled by authStateChanged listener
-            } catch (error) {
-                loginError.textContent = error.message;
-                loginError.style.display = 'block';
-                loginButton.disabled = false;
-                loginButton.textContent = 'Sign In';
-            }
-        });
-
-        // Logout Functionality
-        logoutButton.addEventListener('click', () => {
-            auth.signOut();
-        });
-
-        // Auth State Listener
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                showDashboard(user);
-            } else {
-                showLogin();
-            }
-        });
-
-        function showDashboard(user) {
-            loginView.style.display = 'none';
-            dashboardView.style.display = 'block';
-            welcomeMessage.textContent = `Welcome, ${user.email}!`;
-            loadThreads();
-        }
-
-        function showLogin() {
-            dashboardView.style.display = 'none';
-            loginView.style.display = 'flex';
-            loginForm.reset();
-            loginButton.disabled = false;
-            loginButton.textContent = 'Sign In';
-            loginError.style.display = 'none';
-        }
-
-        // Navigation
-        backButton.addEventListener('click', () => {
-            threadDetailView.classList.add('hidden');
-            threadListView.classList.remove('hidden');
-            currentThreadId = null;
-        });
-
-        // Data Loading
-        function loadThreads() {
-            showLoading();
-            
-            const threadsQuery = db.collection('community_posts')
-                .where('question', '==', true)
-                .orderBy('timestamp', 'desc');
-
-            threadsQuery.get()
-                .then((querySnapshot) => {
-                    hideLoading();
-                    
-                    if (querySnapshot.empty) {
-                        noThreads.classList.remove('hidden');
-                        return;
-                    }
-
-                    noThreads.classList.add('hidden');
-                    threadList.innerHTML = '';
-
-                    querySnapshot.forEach((doc) => {
-                        const thread = doc.data();
-                        const threadElement = createThreadElement(thread, doc.id);
-                        threadList.appendChild(threadElement);
-                    });
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showError('Failed to load discussions: ' + error.message);
-                });
-        }
-
-        function createThreadElement(thread, threadId) {
-            const div = document.createElement('div');
-            div.className = 'thread-item';
-            div.innerHTML = `
-                <div class="thread-header">
-                    <span class="thread-author">${thread.userName || 'Anonymous'}</span>
-                    <span class="thread-grade">${thread.userGrade || 'Grade 4'}</span>
-                </div>
-                <p class="thread-preview">${thread.message}</p>
-                <div class="thread-meta">
-                    <span class="thread-time">${formatTime(thread.timestamp)}</span>
-                </div>
-            `;
-
-            div.addEventListener('click', () => {
-                loadThreadDetail(threadId, thread);
-            });
-
-            return div;
-        }
-
-        function loadThreadDetail(threadId, threadData) {
-            currentThreadId = threadId;
-            threadListView.classList.add('hidden');
-            threadDetailView.classList.remove('hidden');
-
-            // Display original post
-            const originalPost = document.getElementById('original-post');
-            originalPost.innerHTML = `
-                <div class="original-post-header">
-                    <span class="thread-author">${threadData.userName || 'Anonymous'}</span>
-                    <span class="thread-grade">${threadData.userGrade || 'Grade 4'}</span>
-                </div>
-                <p>${threadData.message}</p>
-                <div class="thread-meta">
-                    <span class="thread-time">${formatTime(threadData.timestamp)}</span>
-                </div>
-            `;
-
-            // Load comments
-            loadComments(threadId);
-        }
-
-        function loadComments(threadId) {
-            const commentsList = document.getElementById('comments-list');
-            commentsList.innerHTML = '<div style="text-align: center; padding: 1rem;">Loading responses...</div>';
-
-            const commentsRef = db.collection('community_posts').doc(threadId).collection('comments');
-            
-            commentsRef.orderBy('timestamp', 'asc').get()
-                .then((querySnapshot) => {
-                    commentsList.innerHTML = '';
-
-                    if (querySnapshot.empty) {
-                        commentsList.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">No responses yet. Be the first to contribute!</div>';
-                        return;
-                    }
-
-                    querySnapshot.forEach((doc) => {
-                        const comment = doc.data();
-                        const commentElement = createCommentElement(comment);
-                        commentsList.appendChild(commentElement);
-                    });
-                })
-                .catch((error) => {
-                    commentsList.innerHTML = `<div style="color: #dc3545; text-align: center; padding: 1rem;">Error loading responses: ${error.message}</div>`;
-                });
-        }
-
-        function createCommentElement(comment) {
-            const div = document.createElement('div');
-            div.className = 'comment-item';
-            div.innerHTML = `
-                <div class="comment-header">
-                    <span class="comment-author">${comment.userName || 'Anonymous'}</span>
-                    <span class="comment-time">${formatTime(comment.timestamp)}</span>
-                </div>
-                <p class="comment-message">${comment.message}</p>
-            `;
-            return div;
-        }
-
-        // Comment Form
-        commentForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!currentThreadId) return;
-            
-            const message = commentText.value.trim();
-            if (!message) return;
-
-            const submitButton = document.getElementById('submit-comment');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Posting...';
-
-            try {
-                const user = auth.currentUser;
-                const newComment = {
-                    message: message,
-                    userName: user.displayName || user.email,
-                    userId: user.uid,
-                    userGrade: 'Teacher',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    avatarIndex: 0,
-                    parentCommentId: null
-                };
-
-                const commentsRef = db.collection('community_posts').doc(currentThreadId).collection('comments');
-                await commentsRef.add(newComment);
-
-                commentText.value = '';
-                loadComments(currentThreadId);
-                
-            } catch (error) {
-                showError('Failed to post response: ' + error.message);
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Post Response';
-            }
-        });
-
-        // Utility Functions
-        function formatTime(timestamp) {
-            if (!timestamp) return 'Recently';
-            
-            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-            return new Intl.DateTimeFormat('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            }).format(date);
-        }
-
-        function showLoading() {
-            loadingIndicator.classList.remove('hidden');
-            errorMessage.classList.add('hidden');
-            noThreads.classList.add('hidden');
-        }
-
-        function hideLoading() {
-            loadingIndicator.classList.add('hidden');
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.remove('hidden');
-            loadingIndicator.classList.add('hidden');
-        }
-    </script>
+    <!-- App Modules -->
+    <script type="module" src="./js/config.js"></script>
+    <script type="module" src="./js/firebaseInit.js"></script>
+    <script type="module" src="./js/domElements.js"></script>
+    <script type="module" src="./js/auth.js"></script>
+    <script type="module" src="./js/navigation.js"></script>
+    <script type="module" src="./js/threads.js"></script>
+    <script type="module" src="./js/comments.js"></script>
+    <script type="module" src="./js/leaderboard.js"></script>
+    <script type="module" src="./js/utils.js"></script>
+    <script type="module" src="./js/app.js"></script>
 </body>
 </html>
