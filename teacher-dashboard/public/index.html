@@ -1,4 +1,4 @@
-"<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -110,8 +110,6 @@
             <!-- Leaderboard View -->
             <div id="leaderboard-view" class="content-view hidden">
                 <div class="view-header">
-                    <h2>Student Leaderboard</h2>
-                    <p>Track student progress and achievements</p>
                 </div>
                 
                 <div class="leaderboard-filters">
@@ -137,8 +135,6 @@
             <!-- Analytics View -->
             <div id="analytics-view" class="content-view hidden">
                 <div class="view-header">
-                    <h2>Class Analytics</h2>
-                    <p>Track student progress and performance metrics</p>
                 </div>
                 <div class="placeholder-content">
                     <h3>Analytics Dashboard Coming Soon</h3>
@@ -149,20 +145,108 @@
             <!-- Content Management View -->
             <div id="content-view" class="content-view hidden">
                 <div class="view-header">
-                    <h2>Content Management</h2>
-                    <p>Create and manage learning materials</p>
                 </div>
-                <div class="placeholder-content">
-                    <h3>Content Management Coming Soon</h3>
-                    <p>This section will allow you to create, edit, and organize learning materials for your students.</p>
+
+                <!-- Quiz List Section -->
+                <div id="quiz-list-section">
+                    <div class="quiz-controls">
+                        <button id="create-quiz-btn" class="btn btn-primary">+ Create New Quiz</button>
+                        <div class="quiz-filters">
+                            <input type="text" id="quiz-search" placeholder="Search quizzes..." class="form-control-1">
+                            <select id="difficulty-filter" class="form-control">
+                                <option value="">All Difficulties</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                            <button class="btn btn-outline clear-filters-btn">Clear Filters</button>
+                        </div>
+                    </div>
+                    
+                    <div id="quizzes-table-container">
+                        <!-- Quizzes will be loaded here dynamically -->
+                        <div class="empty-state">
+                            <h3>No quizzes found</h3>
+                            <p>Get started by creating your first math quiz!</p>
+                            <button class="btn btn-primary mt-2" onclick="quizManager.showCreateForm()">
+                                + Create Your First Quiz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Form Section (Hidden by default) -->
+                <div id="quiz-form-section" class="hidden">
+                    <div class="form-header">
+                        <h3 id="form-title">Create New Quiz</h3>
+                        <div class="form-actions">
+                            <button type="button" id="delete-quiz-btn" class="btn btn-danger hidden">Delete Quiz</button>
+                            <button type="button" id="cancel-quiz-btn" class="btn btn-outline">Cancel</button>
+                        </div>
+                    </div>
+
+                    <form id="quiz-form">
+                        <input type="hidden" id="quiz-id">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quiz-title">Quiz Title *</label>
+                                <input type="text" id="quiz-title" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="quiz-description">Description</label>
+                                <textarea id="quiz-description" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quiz-grade">Grade *</label>
+                                <select id="quiz-grade" class="form-control" required>
+                                    <option value="4">Grade 4</option>
+                                    <option value="5">Grade 5</option>
+                                    <option value="6">Grade 6</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quiz-term">Term *</label>
+                                <select id="quiz-term" class="form-control" required>
+                                    <option value="1">Term 1</option>
+                                    <option value="2">Term 2</option>
+                                    <option value="3">Term 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quiz-level">Level *</label>
+                                <select id="quiz-level" class="form-control" required>
+                                    <option value="1">Level 1</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="questions-section">
+                            <div class="section-header">
+                                <h4>Questions</h4>
+                                <button type="button" id="add-question-btn" class="btn btn-secondary">+ Add Question</button>
+                            </div>
+                            <div id="questions-list">
+                                <!-- Questions will be added here dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" id="save-quiz-btn" class="btn btn-primary">Save Quiz</button>
+                            <button type="button" id="cancel-form-btn" class="btn btn-outline">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
             <!-- Settings View -->
             <div id="settings-view" class="content-view hidden">
                 <div class="view-header">
-                    <h2>Settings</h2>
-                    <p>Manage your account preferences</p>
                 </div>
                 <div class="placeholder-content">
                     <h3>Settings Panel Coming Soon</h3>
@@ -187,7 +271,8 @@
     <script type="module" src="./js/comments.js"></script>
     <script type="module" src="./js/leaderboard.js"></script>
     <script type="module" src="./js/utils.js"></script>
+    <!-- Add Quiz Management -->
+    <script type="module" src="./js/quizManagement.js"></script>
     <script type="module" src="./js/app.js"></script>
 </body>
 </html>
-

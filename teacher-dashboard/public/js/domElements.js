@@ -35,3 +35,23 @@ export const settingsView = document.getElementById('settings-view');
 export const menuItems = document.querySelectorAll('.menu-item');
 export const pageTitle = document.getElementById('page-title');
 export const pageDescription = document.getElementById('page-description');
+
+// Quiz Management DOM Elements - with safe getElementById
+export const getQuizElements = () => ({
+    quizListSection: document.getElementById('quiz-list-section'),
+    quizFormSection: document.getElementById('quiz-form-section'),
+    quizzesTableContainer: document.getElementById('quizzes-table-container'),
+    quizSearch: document.getElementById('quiz-search'),
+    difficultyFilter: document.getElementById('difficulty-filter'),
+    quizForm: document.getElementById('quiz-form'),
+    quizId: document.getElementById('quiz-id'),
+    quizTitle: document.getElementById('quiz-title'),
+    quizDescription: document.getElementById('quiz-description'),
+    quizGrade: document.getElementById('quiz-grade'),
+    quizTerm: document.getElementById('quiz-term'),
+    quizLevel: document.getElementById('quiz-level'),
+    questionsList: document.getElementById('questions-list'),
+    saveQuizBtn: document.getElementById('save-quiz-btn'),
+    deleteQuizBtn: document.getElementById('delete-quiz-btn'),
+    formTitle: document.getElementById('form-title')
+});
