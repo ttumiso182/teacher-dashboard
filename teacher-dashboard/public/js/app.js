@@ -11,6 +11,9 @@ function initApp() {
         setupCommentForm();
         setupLeaderboard();
         setupQuizManagement();
+        
+        // Make analytics manager available globally if needed
+        window.analyticsManager = analyticsManager;
     } catch (error) {
         console.error('Error initializing app:', error);
     }

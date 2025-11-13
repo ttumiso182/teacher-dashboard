@@ -3,14 +3,15 @@ import {
     contentView, settingsView, pageTitle, pageDescription,
     threadDetailView, backButton
 } from './domElements.js';
+import { analyticsManager } from './analytics/analyticsManager.js';
 
 // Navigation functionality
 export function setupNavigation() {
     // Set up menu item click events
     menuItems.forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', async () => {
             const viewName = item.getAttribute('data-view');
-            showView(viewName);
+            await showView(viewName);
             
             // Update active menu item
             menuItems.forEach(i => i.classList.remove('active'));
@@ -27,7 +28,7 @@ export function setupNavigation() {
     }
 }
 
-export function showView(viewName) {
+export async function showView(viewName) {
     // Hide all views
     const views = [threadListView, threadDetailView, leaderboardView, analyticsView, contentView, settingsView];
     views.forEach(view => {
@@ -40,14 +41,14 @@ export function showView(viewName) {
         selectedView.classList.remove('hidden');
         
         // Initialize specific view components when shown
-        initializeViewComponents(viewName);
+        await initializeViewComponents(viewName);
     }
     
     // Update page title and description
     updatePageHeader(viewName);
 }
 
-function initializeViewComponents(viewName) {
+async function initializeViewComponents(viewName) {
     switch(viewName) {
         case 'content-view':
             // Initialize quiz manager when content view is shown
@@ -66,6 +67,11 @@ function initializeViewComponents(viewName) {
             if (window.leaderboardManager) {
                 window.leaderboardManager.loadLeaderboard();
             }
+            break;
+            
+        case 'analytics-view':
+            // Initialize analytics dashboard
+            await analyticsManager.initialize();
             break;
     }
 }
@@ -102,8 +108,8 @@ function updatePageHeader(viewName) {
             pageDescription.textContent = 'Track student progress and achievements';
             break;
         case 'analytics-view':
-            pageTitle.textContent = 'Class Analytics';
-            pageDescription.textContent = 'Track student progress and performance metrics';
+            pageTitle.textContent = 'Analytics Dashboard';
+            pageDescription.textContent = 'Monitor student performance and identify at-risk learners';
             break;
         case 'content-view':
             pageTitle.textContent = 'Quiz Management';

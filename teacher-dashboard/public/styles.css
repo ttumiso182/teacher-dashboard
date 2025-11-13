@@ -1165,3 +1165,415 @@ header {
         top: 80px;
     }
 }
+
+/* Analytics Dashboard Styles */
+.analytics-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.analytics-section {
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.analytics-section h3 {
+    color: #2E7D32;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.risk-overview-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.risk-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.risk-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.risk-card.low-risk { 
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.risk-card.medium-risk { 
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+.risk-card.high-risk { 
+    background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
+}
+
+.risk-icon {
+    font-size: 28px;
+    margin-right: 15px;
+    opacity: 0.9;
+}
+
+.risk-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.risk-count {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.difficulty-performance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.difficulty-card {
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.difficulty-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #4CAF50;
+}
+
+.difficulty-card h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.performance-metrics {
+    text-align: left;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.metric:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.metric-label {
+    font-weight: 500;
+    color: #666;
+}
+
+.metric-value {
+    font-weight: bold;
+    color: #333;
+}
+
+.students-table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.students-table th,
+.students-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.students-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2E7D32;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.students-table tr:hover {
+    background: #f8f9fa;
+}
+
+.risk-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    min-width: 70px;
+}
+
+.risk-badge.low { 
+    background: #E8F5E8; 
+    color: #2E7D32; 
+}
+
+.risk-badge.medium { 
+    background: #FFF3E0; 
+    color: #EF6C00; 
+}
+
+.risk-badge.high { 
+    background: #FFEBEE; 
+    color: #C62828; 
+}
+
+.student-selector {
+    margin: 15px 0;
+}
+
+.student-selector select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    transition: border-color 0.2s ease;
+}
+
+.student-selector select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.student-detail-view {
+    margin-top: 20px;
+    padding: 25px;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.student-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.student-detail-header h4 {
+    color: #2E7D32;
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.performance-breakdown,
+.identified-weaknesses,
+.recommendations {
+    margin-bottom: 25px;
+}
+
+.performance-breakdown h5,
+.identified-weaknesses h5,
+.recommendations h5 {
+    color: #2E7D32;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.performance-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.performance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+.performance-item label {
+    font-weight: 600;
+    color: #555;
+    margin: 0;
+}
+
+.performance-item span {
+    font-weight: 500;
+    color: #333;
+}
+
+.identified-weaknesses ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.identified-weaknesses li {
+    margin-bottom: 8px;
+    color: #d32f2f;
+    padding: 8px 12px;
+    background: #FFEBEE;
+    border-radius: 6px;
+    border-left: 3px solid #F44336;
+}
+
+.recommendations p {
+    margin: 10px 0;
+    padding: 16px;
+    background: #E3F2FD;
+    border-left: 4px solid #2196F3;
+    border-radius: 8px;
+    line-height: 1.6;
+    color: #1565C0;
+}
+
+/* View Details Button */
+.view-details-btn {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.view-details-btn:hover {
+    background: #1976D2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design for Analytics */
+@media (max-width: 768px) {
+    .analytics-container {
+        padding: 10px;
+    }
+    
+    .analytics-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .risk-overview-cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .risk-card {
+        padding: 15px;
+    }
+    
+    .difficulty-performance {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .student-detail-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .performance-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .students-table-container {
+        font-size: 14px;
+    }
+    
+    .students-table th,
+    .students-table td {
+        padding: 8px 12px;
+    }
+    
+    .student-detail-view {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .risk-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .risk-icon {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+    
+    .students-table {
+        font-size: 12px;
+    }
+    
+    .students-table th,
+    .students-table td {
+        padding: 6px 8px;
+    }
+    
+    .risk-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        min-width: 60px;
+    }
+}
+
+/* Animation for analytics content */
+@keyframes analyticsFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.analytics-section {
+    animation: analyticsFadeIn 0.5s ease-out;
+}
+
+.analytics-section:nth-child(1) { animation-delay: 0.1s; }
+.analytics-section:nth-child(2) { animation-delay: 0.2s; }
+.analytics-section:nth-child(3) { animation-delay: 0.3s; }
+.analytics-section:nth-child(4) { animation-delay: 0.4s; }
