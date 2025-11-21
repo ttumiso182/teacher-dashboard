@@ -1,239 +1,177 @@
-// Analytics Renderer - Handles UI updates and rendering
+// analyticsRenderer.js - FINAL WITH REAL NAMES
 export class AnalyticsRenderer {
-    constructor() {
-        this.studentsData = null;
-    }
+    constructor() { this.studentsData = null; }
 
     initialize(studentsData) {
         this.studentsData = studentsData;
-        this.updateDashboard(studentsData);
+        this.updateDashboard();
         this.setupEventListeners();
     }
 
-    updateDashboard(studentsData) {
-        this.updateRiskOverview(studentsData);
-        this.updateDifficultyPerformance(studentsData);
-        this.updateAtRiskStudentsTable(studentsData);
-        this.updateStudentSelector(studentsData);
+    updateDashboard() {
+        this.updateRiskOverview();
+        this.updateDifficultyPerformance();
+        this.updateAtRiskTable();
+        this.updateStudentSelector();
     }
 
-    updateRiskOverview(studentsData) {
-        const riskCounts = { low: 0, medium: 0, high: 0 };
-
-        studentsData.forEach(student => {
-            riskCounts[student.riskLevel]++;
+    updateRiskOverview() {
+        const counts = { low: 0, medium: 0, high: 0 };
+        this.studentsData.forEach(s => counts[s.riskLevel]++);
+        ['low', 'medium', 'high'].forEach(l => {
+            document.querySelector(`.${l}-risk .risk-count`).textContent = `${counts[l]} Students`;
         });
-
-        document.querySelector('.low-risk .risk-count').textContent = `${riskCounts.low} Students`;
-        document.querySelector('.medium-risk .risk-count').textContent = `${riskCounts.medium} Students`;
-        document.querySelector('.high-risk .risk-count').textContent = `${riskCounts.high} Students`;
     }
 
-    updateDifficultyPerformance(studentsData) {
-        const averages = { 
-            easy: { accuracy: 0, firstTryAccuracy: 0 }, 
-            medium: { accuracy: 0, firstTryAccuracy: 0 }, 
-            hard: { accuracy: 0, firstTryAccuracy: 0 } 
-        };
-        let studentCount = studentsData.size;
+    updateDifficultyPerformance() {
+        const avg = { easy: 0, medium: 0, hard: 0 };
+        const first = { easy: 0, medium: 0, hard: 0 };
+        const n = this.studentsData.size || 1;
 
-        studentsData.forEach(student => {
-            ['easy', 'medium', 'hard'].forEach(difficulty => {
-                averages[difficulty].accuracy += student.difficultyPerformance[difficulty].accuracy;
-                averages[difficulty].firstTryAccuracy += student.difficultyPerformance[difficulty].firstTryAccuracy;
+        this.studentsData.forEach(s => {
+            ['easy', 'medium', 'hard'].forEach(d => {
+                avg[d] += s.difficultyPerformance[d].accuracy;
+                first[d] += s.difficultyPerformance[d].firstAccuracy;
             });
         });
 
-        // Update UI
-        ['easy', 'medium', 'hard'].forEach(difficulty => {
-            const avgAccuracy = Math.round(averages[difficulty].accuracy / studentCount) || 0;
-            const avgFirstTry = Math.round(averages[difficulty].firstTryAccuracy / studentCount) || 0;
-            
-            document.querySelector(`.${difficulty}-accuracy`).textContent = `${avgAccuracy}%`;
-            document.querySelector(`.${difficulty}-first-try`).textContent = `${avgFirstTry}%`;
+        ['easy', 'medium', 'hard'].forEach(d => {
+            document.querySelector(`.${d}-accuracy`).textContent = `${Math.round(avg[d] / n)}%`;
+            document.querySelector(`.${d}-first-try`).textContent = `${Math.round(first[d] / n)}%`;
         });
     }
 
-    updateAtRiskStudentsTable(studentsData) {
-        const tableBody = document.querySelector('#at-risk-students-table tbody');
-        tableBody.innerHTML = '';
+// Only the table row part needs to change – rest stays the same
+    updateAtRiskTable() {
+        const tbody = document.querySelector('#at-risk-students-table tbody') || document.querySelector('table tbody');
+        tbody.innerHTML = '';
 
-        // Sort students by risk level (high first, then medium)
-        const atRiskStudents = Array.from(studentsData.values())
-            .filter(student => student.riskLevel !== 'low')
-            .sort((a, b) => {
-                const riskOrder = { high: 3, medium: 2, low: 1 };
-                return riskOrder[b.riskLevel] - riskOrder[a.riskLevel];
-            });
+        const atRisk = [...this.studentsData.values()]
+            .filter(s => s.riskLevel !== 'low')
+            .sort((a, b) => b.riskLevel === 'high' ? -1 : 1);
 
-        atRiskStudents.forEach((student) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${student.displayName}</td>
-                <td><span class="risk-badge ${student.riskLevel}">${student.riskLevel}</span></td>
-                <td>${student.weaknesses.join(', ') || 'No specific weaknesses'}</td>
-                <td>${student.lastActivity}</td>
-                <td>
-                    <button class="view-details-btn" data-userid="${student.userId}">View Details</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-        // Add empty state
-        if (tableBody.children.length === 0) {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td colspan="5" style="text-align: center; color: #666; padding: 2rem;">
-                    No at-risk students found. Great job!
-                </td>
-            `;
-            tableBody.appendChild(row);
+        if (!atRisk.length) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:#666;">No at-risk students found. Great job!</td></tr>`;
+            return;
         }
 
-        this.attachDetailButtonListeners();
+        atRisk.forEach(s => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong>${s.displayName}</strong><br><small>${s.grade} • ${s.school}</small></td>
+                <td><span class="risk-badge ${s.riskLevel}">${s.riskLevel.toUpperCase()}</span></td>
+                <td>${s.weaknesses.join(', ') || '—'}</td>
+                <td>${s.lastActivity}</td>
+                <td><button class="view-details-btn" data-userid="${s.userId}">View Details</button></td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        this.attachDetailButtons();
     }
 
-    updateStudentSelector(studentsData) {
+    updateStudentSelector() {
         const select = document.getElementById('student-select');
+        if (!select) return;
         select.innerHTML = '<option value="">Select a student...</option>';
-
-        // Sort students by name for easier selection
-        const sortedStudents = Array.from(studentsData.values()).sort((a, b) => 
-            a.displayName.localeCompare(b.displayName)
-        );
-
-        sortedStudents.forEach((student) => {
-            const option = document.createElement('option');
-            option.value = student.userId;
-            option.textContent = `${student.displayName} (${student.riskLevel} risk)`;
-            select.appendChild(option);
-        });
+        [...this.studentsData.values()]
+            .sort((a, b) => a.displayName.localeCompare(b.displayName))
+            .forEach(s => select.add(new Option(`${s.displayName} (${s.riskLevel} risk)`, s.userId)));
     }
 
     showStudentDetails(userId) {
-        const student = this.studentsData.get(userId);
-        const detailView = document.getElementById('student-detail-view');
-        
-        if (student) {
-            detailView.innerHTML = this.generateStudentDetailHTML(student);
-            detailView.classList.remove('hidden');
-            
-            // Scroll to detail view smoothly
-            setTimeout(() => {
-                detailView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
-        }
-    }
+        const s = this.studentsData.get(userId);
+        if (!s) return;
 
-    generateStudentDetailHTML(student) {
-        const { easy, medium, hard } = student.difficultyPerformance;
-        
-        return `
+        const { easy, medium, hard } = s.difficultyPerformance;
+
+        document.getElementById('student-detail-view').innerHTML = `
             <div class="student-detail-header">
-                <h4>${student.displayName}</h4>
-                <div class="risk-badge ${student.riskLevel}">${student.riskLevel.toUpperCase()} RISK</div>
+                <h4>${s.displayName}</h4>
+                <div class="risk-badge ${s.riskLevel}">${s.riskLevel.toUpperCase()} RISK</div>
             </div>
-            
+
             <div class="performance-breakdown">
-                <h5>Performance Breakdown</h5>
+                <h5>Performance by Difficulty</h5>
                 <div class="performance-grid">
-                    <div class="performance-item">
-                        <label>Easy Level:</label>
-                        <span>${easy.accuracy}% accuracy (${easy.firstTryAccuracy}% first try)</span>
-                    </div>
-                    <div class="performance-item">
-                        <label>Medium Level:</label>
-                        <span>${medium.accuracy}% accuracy (${medium.firstTryAccuracy}% first try)</span>
-                    </div>
-                    <div class="performance-item">
-                        <label>Hard Level:</label>
-                        <span>${hard.accuracy}% accuracy (${hard.firstTryAccuracy}% first try)</span>
-                    </div>
+                    <div>Easy:   <strong>${easy.accuracy}%</strong> (${easy.firstAccuracy}% first try)</div>
+                    <div>Medium: <strong>${medium.accuracy}%</strong> (${medium.firstAccuracy}% first try)</div>
+                    <div>Hard:   <strong>${hard.accuracy}%</strong> (${hard.firstAccuracy}% first try)</div>
                 </div>
             </div>
-            
+
             <div class="identified-weaknesses">
-                <h5>Areas Needing Improvement</h5>
+                <h5>Areas Needing Attention</h5>
                 <ul>
-                    ${student.weaknesses.map(weakness => `<li>${weakness}</li>`).join('')}
-                    ${student.weaknesses.length === 0 ? '<li>No specific weaknesses identified</li>' : ''}
+                    ${s.weaknesses.length ? s.weaknesses.map(w => `<li>${w}</li>`).join('') 
+                        : '<li>No major issues detected</li>'}
                 </ul>
             </div>
-            
-            <div class="recommendations">
-                <h5>Recommended Actions</h5>
-                <p>${this.generateRecommendations(student)}</p>
+
+            <!-- THIS IS THE NEW SECTION YOU WANTED -->
+            <div class="teacher-recommendations">
+                <h5>Recommended Teacher Actions</h5>
+                <div class="recommendation-list">
+                    ${this.generateTeacherRecommendations(s)}
+                </div>
             </div>
         `;
+
+        document.getElementById('student-detail-view').classList.remove('hidden');
+        document.getElementById('student-detail-view').scrollIntoView({ behavior: 'smooth' });
     }
 
-    generateRecommendations(student) {
-        const recommendations = [];
-        const { easy, medium, hard } = student.difficultyPerformance;
-        
-        if (student.riskLevel === 'high') {
-            recommendations.push("Schedule one-on-one intervention sessions");
-        }
-        
-        if (hard.accuracy < 70) {
-            recommendations.push("Provide additional practice with challenging concepts");
-        }
-        
-        if (medium.accuracy < 80) {
-            recommendations.push("Focus on building foundational knowledge before advancing");
-        }
-        
-        if (easy.accuracy < 90) {
-            recommendations.push("Review fundamental concepts with targeted exercises");
-        }
-        
-        if (hard.firstTryAccuracy < 60) {
-            recommendations.push("Encourage slower, more deliberate problem-solving");
-        }
-        
-        if (recommendations.length === 0) {
-            return "Student is performing well overall. Continue with current learning path and provide enrichment activities.";
-        }
-        
-        return recommendations.join('. ') + '.';
-    }
-
-    attachDetailButtonListeners() {
+    attachDetailButtons() {
         document.querySelectorAll('.view-details-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const userId = e.target.dataset.userid;
-                this.showStudentDetails(userId);
-            });
+            btn.onclick = () => this.showStudentDetails(btn.dataset.userid);
         });
     }
 
     setupEventListeners() {
-        const studentSelect = document.getElementById('student-select');
-        if (studentSelect) {
-            studentSelect.addEventListener('change', (e) => {
-                if (e.target.value) {
-                    this.showStudentDetails(e.target.value);
-                } else {
-                    this.hideStudentDetails();
-                }
-            });
-        }
+        const select = document.getElementById('student-select');
+        if (select) select.onchange = e => e.target.value ? this.showStudentDetails(e.target.value) : this.hideStudentDetails();
     }
 
     hideStudentDetails() {
-        const detailView = document.getElementById('student-detail-view');
-        detailView.classList.add('hidden');
+        document.getElementById('student-detail-view')?.classList.add('hidden');
     }
 
-    showErrorState(message) {
-        const analyticsContainer = document.querySelector('.analytics-container');
-        analyticsContainer.innerHTML = `
-            <div class="error-message">
-                <h3>Unable to Load Analytics</h3>
-                <p>${message}</p>
-                <button onclick="window.location.reload()" class="btn btn-primary">Retry</button>
-            </div>
-        `;
+    generateTeacherRecommendations(s) {
+        const recs = [];
+
+        if (s.riskLevel === 'high') {
+            recs.push("⚡ <strong>Urgent one-on-one intervention needed this week</strong>");
+            recs.push("• Schedule a 15–20 min private session with the student");
+            recs.push("• Contact parent/guardian to discuss home support");
+        } else if (s.riskLevel === 'medium') {
+            recs.push("⚡ <strong>Plan targeted support within the next 2 weeks</strong>");
+        }
+
+        const { easy, medium, hard } = s.difficultyPerformance;
+
+        if (hard.accuracy < 60) {
+            recs.push("• Provide simpler real-life examples of the hard concepts (e.g. word problems with visuals)");
+            recs.push("• Pair student with a stronger peer for hard levels");
+            recs.push("• Assign 5–10 extra hard questions as homework with step-by-step hints");
+        }
+        if (medium.accuracy < 70) {
+            recs.push("• Re-teach medium concepts in small group during break or after school");
+            recs.push("• Use manipulatives or drawings to make abstract ideas concrete");
+        }
+        if (easy.accuracy < 85) {
+            recs.push("• Quick 5-minute daily review of basic facts (flash cards, speed drills)");
+            recs.push("• Check for gaps in earlier grades – student may have missed foundation");
+        }
+        if (hard.firstAccuracy < 50 || medium.firstAccuracy < 60) {
+            recs.push("• Teach “think-aloud” strategy – student must explain their reasoning out loud");
+            recs.push("• Encourage pausing before answering instead of guessing");
+        }
+
+        if (recs.length === 0) {
+            return "<em>🎉 Student is performing well! Consider giving enrichment tasks or leadership role in group activities.</em>";
+        }
+
+        return recs.map(r => `<div class=\"rec-item\">${r}</div>`).join('');
     }
 }
+
